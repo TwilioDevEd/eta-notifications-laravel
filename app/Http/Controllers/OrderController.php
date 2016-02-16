@@ -14,6 +14,10 @@ class OrderController extends Controller
     }
 
     public function show($id) {
+        return view('show', ['order' => Order::find($id)]);
+    }
+
+    public function pickup($id) {
         return view('index', ['orders' => Order::all()]);
     }
 }

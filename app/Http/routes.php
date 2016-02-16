@@ -20,3 +20,13 @@ Route::get('/order/{id}',
     ['as' => 'order.show',
      'uses' => 'OrderController@show']
 );
+
+Route::post('/order/{id}/pickup',
+    ['as' => 'order.pickup',
+     'uses' => 'OrderController@pickup']
+);
+
+Route::post('/order/{id}/deliver',
+    ['as' => 'order.deliver',
+     'uses' => 'OrderController@deliver']
+);

@@ -12,7 +12,6 @@ class OrderControllerTest extends TestCase
     public function testIndex()
     {
         // Given
-
         $order1 = new Order([
             'customer_name' => 'Mia Wallace',
             'phone_number' => '+15551231234'

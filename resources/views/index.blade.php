@@ -1,10 +1,11 @@
 @extends('layouts.master')
 
 @section('title')
-    Customers
+    Orders
 @endsection
 
 @section('content')
+@include('_messages')
 <div class="container">
     <h2>Orders</h2>
     <table class="table table-striped table-hover">
