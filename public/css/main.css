@@ -1,0 +1,14 @@
+footer {
+  border-top:1px solid #eee;
+  padding:20px;
+  margin:20px;
+  text-align:center;
+}
+
+footer i {
+  color:red;
+}
+
+.top-buffer {
+  margin-top:20px;
+}

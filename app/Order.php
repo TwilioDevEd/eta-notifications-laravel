@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Authenticatable
+class Order extends Authenticatable
 {
     /**
      * The attributes that are mass assignable.
@@ -12,6 +12,6 @@ class Customer extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'phone_number',
+        'customer_name', 'phone_number',
     ];
 }

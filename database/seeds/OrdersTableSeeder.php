@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Customer;
+use App\Order;
 
-class CustomersTableSeeder extends Seeder
+class OrdersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,8 +12,8 @@ class CustomersTableSeeder extends Seeder
      */
     public function run()
     {
-        (new Customer(
-            ['name' => 'Vincent Vega',
+        (new Order(
+            ['customer_name' => 'Vincent Vega',
              'phone_number' => '+15551234567']
         ))->save();
     }
