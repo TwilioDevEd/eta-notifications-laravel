@@ -6,7 +6,14 @@ install:
 - composer install
 env:
   global:
+  - DB_HOST=localhost
+  - DB_DATABASE=eta_notifications
+  - DB_USERNAME=postgres
   - APP_ENV=testing
-  - TWILIO_AUTH_TOKEN=token_here
-  - TWILIO_ACCOUNT_SID=sid_here
-  - TWILIO_NUMBER=number_here
+  - APP_KEY=rJhIJXkdo3FwwqdDJsC7OadHIVhnaEEE
+  - TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  - TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  - TWILIO_NUMBER=+15552737123
+before_script:
+  - psql -c 'create database eta_notifications;' -U postgres
+  - php artisan migrate
