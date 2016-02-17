@@ -5,20 +5,22 @@
 @endsection
 
 @section('content')
-@include('_messages')
 <div class="container">
+    @include('_messages')
     <h2>Orders</h2>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Order ID</th>
+                <th>Customer Name</th>
                 <th>Phone Number</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($orders as $order)
                 <tr>
-                    <td>{{ Html::linkRoute('order.show', $order->customer_name, array($order->id)) }}</td>
+                    <td>{{ Html::linkRoute('order.show', '000-0' . $order->id, array($order->id)) }}</td>
+                    <td>{{ $order->customer_name }}</td>
                     <td>{{ $order->phone_number }}</td>
                 </tr>
             @endforeach

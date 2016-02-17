@@ -28,4 +28,101 @@ class OrderControllerTest extends TestCase
              ->see('Mia Wallace')
              ->see('Marsellus Wallace');
     }
+
+    public function testPickup() {
+        // Given
+        $this->startSession();
+        $order = new Order([
+            'customer_name' => 'Mia Wallace',
+            'phone_number' => '+15551231234'
+        ]);
+        $order->save();
+
+        $this->assertCount(1, Order::all());
+
+        $mockTwilioService = Mockery::mock('Services_Twilio')
+                                ->makePartial();
+        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioMessages = Mockery::mock();
+        $mockTwilioAccount->messages = $mockTwilioMessages;
+        $mockTwilioService->account = $mockTwilioAccount;
+
+        $twilioNumber = config('services.twilio')['number'];
+        $mockTwilioMessages
+            ->shouldReceive('sendMessage')
+            ->with($twilioNumber,
+                   $order->phone_number,
+                   'Your clothes will be sent and will be delivered in 20 minutes'
+            )
+            ->once();
+
+        $this->app->instance(
+            'Services_Twilio',
+            $mockTwilioService
+        );
+
+        // When
+        $response = $this->call(
+            'POST',
+            route('order.pickup', ['id' => $order->id]),
+            ['_token' => csrf_token()]
+        );
+
+        // Then
+        $this->assertRedirectedToRoute('order.index');
+        $this->assertSessionHas('status');
+        $flashreservation = $this->app['session']->get('status');
+        $this->assertEquals(
+            $flashreservation,
+            'Message was delivered'
+        );
+    }
+
+    public function testDeliver() {
+        // Given
+        $this->startSession();
+        $order = new Order([
+            'customer_name' => 'Marsellus Wallace',
+            'phone_number' => '+15551231234'
+        ]);
+        $order->save();
+
+        $this->assertCount(1, Order::all());
+
+        $mockTwilioService = Mockery::mock('Services_Twilio')
+                                ->makePartial();
+        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioMessages = Mockery::mock();
+        $mockTwilioAccount->messages = $mockTwilioMessages;
+        $mockTwilioService->account = $mockTwilioAccount;
+
+        $twilioNumber = config('services.twilio')['number'];
+        $mockTwilioMessages
+            ->shouldReceive('sendMessage')
+            ->with($twilioNumber,
+                   $order->phone_number,
+                   'Your clothes have been delivered')
+            ->once();
+
+        $this->app->instance(
+            'Services_Twilio',
+            $mockTwilioService
+        );
+
+        // When
+        $response = $this->call(
+            'POST',
+            route('order.deliver', ['id' => $order->id]),
+            ['_token' => csrf_token()]
+        );
+
+        // Then
+        $this->assertRedirectedToRoute('order.index');
+        $this->assertSessionHas('status');
+        $flashreservation = $this->app['session']->get('status');
+        $this->assertEquals(
+            $flashreservation,
+            'Message was delivered'
+        );
+    }
 }
