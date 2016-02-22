@@ -26,7 +26,9 @@ class OrderControllerTest extends TestCase
         // When
         $this->visit('/')
              ->see('Mia Wallace')
-             ->see('Marsellus Wallace');
+             ->see('Marsellus Wallace')
+             ->see('Ready')
+             ->see('None');
     }
 
     public function testPickup() {

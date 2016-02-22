@@ -16,6 +16,8 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->string('customer_name');
             $table->string('phone_number');
+            $table->enum('status', array('Ready', 'Shipped', 'Delivered'))->default('Ready');
+            $table->enum('notification_status', array('None', 'queued', 'sent', 'delivered'))->default('None');
             $table->timestamps();
         });
     }
