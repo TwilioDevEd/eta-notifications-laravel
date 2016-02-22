@@ -20,6 +20,9 @@ class OrderController extends Controller
 
     public function pickup(TwilioRestClient $client, Request $request, $id) {
         $order = Order::find($id);
+        $order->status = 'Shipped';
+        $order->notification_status = 'queued';
+        $order->save();
 
         $this->sendMessage(
             $client,

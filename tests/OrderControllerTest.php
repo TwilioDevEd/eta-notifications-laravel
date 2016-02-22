@@ -39,7 +39,9 @@ class OrderControllerTest extends TestCase
             'phone_number' => '+15551231234'
         ]);
         $order->save();
-
+        $order = $order->fresh();
+        $this->assertEquals('Ready', $order->status);
+        $this->assertEquals('None', $order->notification_status);
         $this->assertCount(1, Order::all());
 
         $mockTwilioService = Mockery::mock('Services_Twilio')
@@ -71,6 +73,9 @@ class OrderControllerTest extends TestCase
         );
 
         // Then
+        $order = $order->fresh();
+        $this->assertEquals('Shipped', $order->status);
+        $this->assertEquals('queued', $order->notification_status);
         $this->assertRedirectedToRoute('order.index');
         $this->assertSessionHas('status');
         $flashreservation = $this->app['session']->get('status');
