@@ -28,7 +28,7 @@ class OrderController extends Controller
         $this->sendMessage(
             $client,
             $order->phone_number,
-            'Your clothes will be sent and will be delivered in 20 minutes',
+            'Your laundry is done and on its way to you!',
             $callbackUrl
         );
 
@@ -45,7 +45,7 @@ class OrderController extends Controller
         $this->sendMessage(
             $client,
             $order->phone_number,
-            'Your clothes have been delivered',
+            'Your laundry is arriving now.',
             $callbackUrl
         );
 

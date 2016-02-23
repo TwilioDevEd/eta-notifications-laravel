@@ -57,7 +57,7 @@ class OrderControllerTest extends TestCase
             ->with([
                 'From' => $twilioNumber,
                 'To' => $order->phone_number,
-                'Body' => 'Your clothes will be sent and will be delivered in 20 minutes',
+                'Body' => 'Your laundry is done and on its way to you!',
                 'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
             ])->once();
 
@@ -107,7 +107,7 @@ class OrderControllerTest extends TestCase
             ->with([
                 'From' => $twilioNumber,
                 'To' => $order->phone_number,
-                'Body' => 'Your clothes have been delivered',
+                'Body' => 'Your laundry is arriving now.',
                 'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
             ])->once();
 
