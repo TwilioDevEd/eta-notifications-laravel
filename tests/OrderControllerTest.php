@@ -26,7 +26,9 @@ class OrderControllerTest extends TestCase
         // When
         $this->visit('/')
              ->see('Mia Wallace')
-             ->see('Marsellus Wallace');
+             ->see('Marsellus Wallace')
+             ->see('Ready')
+             ->see('None');
     }
 
     public function testPickup() {
@@ -37,7 +39,9 @@ class OrderControllerTest extends TestCase
             'phone_number' => '+15551231234'
         ]);
         $order->save();
-
+        $order = $order->fresh();
+        $this->assertEquals('Ready', $order->status);
+        $this->assertEquals('None', $order->notification_status);
         $this->assertCount(1, Order::all());
 
         $mockTwilioService = Mockery::mock('Services_Twilio')
@@ -49,12 +53,13 @@ class OrderControllerTest extends TestCase
 
         $twilioNumber = config('services.twilio')['number'];
         $mockTwilioMessages
-            ->shouldReceive('sendMessage')
-            ->with($twilioNumber,
-                   $order->phone_number,
-                   'Your clothes will be sent and will be delivered in 20 minutes'
-            )
-            ->once();
+            ->shouldReceive('create')
+            ->with([
+                'From' => $twilioNumber,
+                'To' => $order->phone_number,
+                'Body' => 'Your clothes will be sent and will be delivered in 20 minutes',
+                'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
+            ])->once();
 
         $this->app->instance(
             'Services_Twilio',
@@ -69,13 +74,10 @@ class OrderControllerTest extends TestCase
         );
 
         // Then
-        $this->assertRedirectedToRoute('order.index');
-        $this->assertSessionHas('status');
-        $flashreservation = $this->app['session']->get('status');
-        $this->assertEquals(
-            $flashreservation,
-            'Message was delivered'
-        );
+        $order = $order->fresh();
+        $this->assertEquals('Shipped', $order->status);
+        $this->assertEquals('queued', $order->notification_status);
+        $this->assertRedirectedToRoute('order.show', ['id' => $order->id]);
     }
 
     public function testDeliver() {
@@ -86,7 +88,10 @@ class OrderControllerTest extends TestCase
             'phone_number' => '+15551231234'
         ]);
         $order->save();
+        $order = $order->fresh();
 
+        $this->assertEquals('Ready', $order->status);
+        $this->assertEquals('None', $order->notification_status);
         $this->assertCount(1, Order::all());
 
         $mockTwilioService = Mockery::mock('Services_Twilio')
@@ -98,11 +103,13 @@ class OrderControllerTest extends TestCase
 
         $twilioNumber = config('services.twilio')['number'];
         $mockTwilioMessages
-            ->shouldReceive('sendMessage')
-            ->with($twilioNumber,
-                   $order->phone_number,
-                   'Your clothes have been delivered')
-            ->once();
+            ->shouldReceive('create')
+            ->with([
+                'From' => $twilioNumber,
+                'To' => $order->phone_number,
+                'Body' => 'Your clothes have been delivered',
+                'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
+            ])->once();
 
         $this->app->instance(
             'Services_Twilio',
@@ -117,12 +124,36 @@ class OrderControllerTest extends TestCase
         );
 
         // Then
+        $order = $order->fresh();
+        $this->assertEquals('Delivered', $order->status);
+        $this->assertEquals('queued', $order->notification_status);
         $this->assertRedirectedToRoute('order.index');
-        $this->assertSessionHas('status');
-        $flashreservation = $this->app['session']->get('status');
-        $this->assertEquals(
-            $flashreservation,
-            'Message was delivered'
+    }
+
+    public function testNotificationStatus() {
+        // Given
+        $this->startSession();
+        $order = new Order([
+            'customer_name' => 'Marsellus Wallace',
+            'phone_number' => '+15551231234'
+        ]);
+        $order->save();
+        $order = $order->fresh();
+
+        $this->assertCount(1, Order::all());
+        $this->assertEquals('Ready', $order->status);
+        $this->assertEquals('None', $order->notification_status);
+
+        // When
+        $response = $this->call(
+            'POST',
+            route('order.notification.status', ['id' => $order->id, 'MessageStatus' => 'sent']),
+            ['_token' => csrf_token()]
         );
+
+        // Then
+        $order = $order->fresh();
+        $this->assertEquals('Ready', $order->status);
+        $this->assertEquals('sent', $order->notification_status);
     }
 }

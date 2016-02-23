@@ -31,4 +31,8 @@ Route::group(['middleware' => ['web']], function () {
         ['as' => 'order.deliver',
          'uses' => 'OrderController@deliver']
     );
+    Route::post('/order/{id}/notification/status/update',
+        ['as' => 'order.notification.status',
+         'uses' => 'OrderController@notificationStatus']
+    );
 });
