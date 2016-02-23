@@ -38,26 +38,31 @@ ETA notifications implementation with PHP - Laravel and Twilio.
    ```
 1. Run the migrations:
 
-  ```bash
-  $ php artisan migrate
-  ```
+   ```bash
+   $ php artisan migrate
+   ```
 1. Load the seed data:
 
-  ```bash
-  $ php artisan db:seed
-  ```
+   We have provided an example name and phone number in the seed data. In order for
+   the application to send sms notifications, you must edit this seed data providing
+   a real phone number where you want to receive the sms notifications.
 
-  We have provided an example name and phone number in the seed data. In order for
-  the application to send sms notifications, you must edit this seed data providing
-  a real phone number where you want to receive the sms notifications.
+   In order to do this, you must modify
+   [this file](https://github.com/TwilioDevEd/eta-notifications-laravel/blob/master/database/seeds/OrdersTableSeeder.php)
+   that is located at: `project-root/database/seeds/OrdersTableSeeder.php`
 
-  In order to do this, you must modify
-  [this file](https://github.com/TwilioDevEd/eta-notifications-laravel/blob/master/database/seeds/OrdersTableSeeder.php)
-  that is located at:
+   ```bash
+   $ php artisan db:seed
+   ```
 
-  ```
-  project-root/database/seeds/OrdersTableSeeder.php
-  ```
+1. Expose your application to the wider internet using ngrok. You can look
+   [here](#expose-the-application-to-the-wider-internet) for more details. This step
+   is important, as the application won't work as expected if you run it through
+   localhost.
+
+   ```bash
+   $ ngrok http 8000
+   ```
 
 1. Run the application using Artisan.
 
@@ -65,7 +70,22 @@ ETA notifications implementation with PHP - Laravel and Twilio.
   $ php artisan serve
   ```
 
-  now you can access the application at http://localhost:8000
+  now you can access the application at your ngrok subdomain that should look
+  something like this: `http://<subdomain>.ngrok.io`
+
+### Expose the Application to the Wider Internet
+
+If you want your application to be accessible from the internet, you can either
+forward the necessary ports in your router, or use a tool like
+[ngrok](https://ngrok.com/) that will expose your local host to the internet.
+
+You can read [this blog](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html)
+for more details on how to use ngrok, but if you are using version 2.x, exposing
+a specific port should be as easy as:
+
+```bash
+$ ngrok http 8000
+```
 
 ### Dependencies
 

@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-md-12 top-buffer">
             {{ Form::open(array('route' => array('order.deliver', $order->id), 'method' => 'post')) }}
-                <button type="submit" class="btn btn btn-primary full-width">Deliver up the package</button>
+                <button type="submit" class="btn btn btn-primary full-width">Deliver the package</button>
             {{ Form::close() }}
         </div>
     </div>
