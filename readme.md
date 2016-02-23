@@ -41,7 +41,8 @@ ETA notifications implementation with PHP - Laravel and Twilio.
    ```bash
    $ php artisan migrate
    ```
-1. Load the seed data:
+
+1. Modify seed data:
 
    We have provided an example name and phone number in the seed data. In order for
    the application to send sms notifications, you must edit this seed data providing
@@ -50,6 +51,8 @@ ETA notifications implementation with PHP - Laravel and Twilio.
    In order to do this, you must modify
    [this file](https://github.com/TwilioDevEd/eta-notifications-laravel/blob/master/database/seeds/OrdersTableSeeder.php)
    that is located at: `project-root/database/seeds/OrdersTableSeeder.php`
+
+1. Seed the database:
 
    ```bash
    $ php artisan db:seed
