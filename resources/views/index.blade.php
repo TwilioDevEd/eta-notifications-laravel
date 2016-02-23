@@ -6,7 +6,6 @@
 
 @section('content')
 <div class="container">
-    @include('_messages')
     <h2>Orders</h2>
     <table class="table table-striped table-hover">
         <thead>
