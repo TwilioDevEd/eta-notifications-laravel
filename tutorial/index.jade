@@ -22,7 +22,7 @@
   .step(
     data-title="Customer's notifications",
     data-file='app/Http/Controllers/OrderController.php'
-    data-highlight='21-49')
+    data-highlight='21-53')
     :markdown
       ## Customer's Notifications
 
@@ -58,7 +58,7 @@
   .step(
     data-title='Handling the Notification Request',
     data-file='app/Http/Controllers/OrderController.php',
-    data-highlight='51-62')
+    data-highlight='61-73')
     :markdown
       ## Handling the Notification Request
 
@@ -68,6 +68,21 @@
       Now the client has the information about when their clothes will
       arrive at his or her home.
 
+  .step(
+    data-title='Handling the Twilio Callback',
+    data-file='app/Http/Controllers/OrderController.php',
+    data-highlight='55-59')
+    :markdown
+      ## Handling the Twilio Callback
+
+      Twilio will make a post request each time your message status changes to one of the following: queued, failed, sent, delivered, or undelivered.
+
+      The order's notifications status will change accordingly.
+
+      ---
+      **See Also:**
+      * [Message Status](//www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter-request-parameters)
+  
   .step
     :markdown
       ## Where to next?
