@@ -12,7 +12,13 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-    Route::get('/',
+    Route::get(
+        '/', ['as' => 'home', function () {
+            return response()->view('home');
+        }]
+    );
+
+    Route::get('/orders',
         ['as' => 'order.index',
          'uses' => 'OrderController@index']
     );
