@@ -5,29 +5,35 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <h2>Orders</h2>
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Phone Number</th>
-                <th>Status</th>
-                <th>Notification Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($orders as $order)
-                <tr>
-                    <td>{{ Html::linkRoute('order.show', '000-0' . $order->id, array($order->id)) }}</td>
-                    <td>{{ $order->customer_name }}</td>
-                    <td>{{ $order->phone_number }}</td>
-                    <td>{!! Html::renderStatus($order->status) !!}</td>
-                    <td>{!! Html::renderNotificationStatus($order->notification_status) !!}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row" id="order-index-header">
+        <div class="col-md-1 col-xs-1">
+            <span class="order-index-title">ORDERS</span>
+        </div>
+        <div class="col-md-10 col-xs-10 text-center">
+            <img id="order-index-icon" src="/img/small-logo.png"/>
+        </div>
+    </div>
+    <div class=row>
+        <div class="col-xs-12 no-padding">
+            <div class="list-group list-special">
+                @foreach ($orders as $order)
+                    <a href="{{ route('order.show', ['id' => $order->id]) }}" class="list-group-item list-special-item">
+                        <div class="row">
+                            <div class="col-xs-8 text-uppercase">
+                                {{ $order->customer_name }}
+                            </div>
+                            <div class="col-xs-3 index-status text-uppercase">
+                                {{ $order->status }}
+                            </div>
+                            <div class="col-xs-1">
+                                <i class="fa fa-caret-right"></i>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    <div>
 </div>
 @endsection

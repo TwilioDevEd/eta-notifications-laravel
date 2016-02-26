@@ -24,11 +24,10 @@ class OrderControllerTest extends TestCase
         $order2->save();
 
         // When
-        $this->visit('/')
+        $this->visit('/orders')
              ->see('Mia Wallace')
              ->see('Marsellus Wallace')
-             ->see('Ready')
-             ->see('None');
+             ->see('Ready');
     }
 
     public function testPickup() {
