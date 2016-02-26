@@ -3,46 +3,51 @@
     data-title='What Are We Building?',
     data-file='app/Http/routes.php')
     :markdown
-      ## What Are We Building?
+      ## Eta Notifications
+      ## Laundry On-Demand
 
       ![ETA Notifications](http://howtodocs.s3.amazonaws.com/eta-notifications.png)
 
-      There are a wide range of businesses that work delivering all kinds of
-      services or products at the houses of their customers.
+      There are a wide range of businesses that deliver goods or services to their
+      customers on-demand. Companies like Uber, TaskRabbit, and Instacart have built
+      an entire industry around the fact that we, the customer, like to order things
+      instantly, and be notified of their progress towards us.
 
-      In our case, we'll build a system for a laundry store, that will allow the
-      user to notify their clients about the ETA of his or her clothes using Twilio
-      Client API.
+      In this tutorial, we'll build a notification system for Laundr.io ,an on-demand
+      laundry service. In this app we will allow the delivery person to trigger notification events when:
+      1. Delivery person picks up laundry to be delivered
+      2. Delivery person is arriving to the customer's house.
 
-      ---
-
-      **See Also:**
-      * [Twilio SMS and MMS PHP Quickstart](//www.twilio.com/docs/quickstart/php/sms)
+      In a production app we would probably trigger the second notification when
+      the Delivery person was physically near the customer, using GPS. In this
+      case we'll just use a button.
+  
+      Let's get started!
 
   .step(
-    data-title="Customer's notifications",
+    data-title="Trigger the Notifications",
     data-file='app/Http/Controllers/OrderController.php'
     data-highlight='21-53')
     :markdown
-      ## Customer's Notifications
+      ## Trigger the Notifications
 
-      This screen shows a couple of buttons that allow the laundry delivery
-      person to send out notifications. There are two cases we'd like to handle:
+      This screen shows two buttons that allow the laundry delivery
+      person to trigger notifications. There are two cases we'd like to handle:
 
       1. Send a notification when the laundry delivery person picked up the
          clothes, so the client will receive a SMS with the ETA of their
          clothes.
       1. Send a notification when the clothes have arrived to their destination.
 
-      Now, we're going to rely on the Twilio API Client to actually send out the
-      notifications.
+      Now, on the server we're going to use the Twilio API Client to actually
+      send out the notifications.
 
   .step(
-    data-title='Creating a Twilio API Client',
+    data-title='Setting Up the Twilio REST Client',
     data-file='app/Providers/TwilioRestClientProvider.php',
     data-highlight='15-20')
     :markdown
-      ## Creating a Twilio REST API Client
+      ## Setting up the Twilio REST Client
 
       Here we create an authenticated Twilio REST API client that we can use
       anytime we need to send a text message.We initialize it with our
@@ -56,17 +61,16 @@
       * [Laravel Service Providers](//laravel.com/docs/master/providers)
 
   .step(
-    data-title='Handling the Notification Request',
+    data-title='Handling the Notification Trigger',
     data-file='app/Http/Controllers/OrderController.php',
     data-highlight='61-73')
     :markdown
-      ## Handling the Notification Request
+      ## Handling the Notification Trigger
 
       In `OrderController` we extract the phone number stored in each order,
       and then simply send an SMS message with the specified body.
 
-      Now the client has the information about when their clothes will
-      arrive at his or her home.
+      Next let's look closer at how we send the SMS.
 
   .step(
     data-title='Handling the Twilio Callback',
