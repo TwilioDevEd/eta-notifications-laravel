@@ -8,20 +8,16 @@
 
       ![ETA Notifications](http://howtodocs.s3.amazonaws.com/eta-notifications.png)
 
-      There are a wide range of businesses that deliver goods or services to their
-      customers on-demand. Companies like Uber, TaskRabbit, and Instacart have built
-      an entire industry around the fact that we, the customer, like to order things
-      instantly, and be notified of their progress towards us.
+      There are a wide range of businesses that deliver goods or services to
+      their customers on-demand. Companies like Uber, TaskRabbit, and
+      Instacart have built an entire industry around the fact that we, the
+      customer, like to order things instantly, wherever we are. The key to
+      those services working is notifying customers instantly when things
+      change.
 
-      In this tutorial, we'll build a notification system for Laundr.io ,an on-demand
-      laundry service. In this app we will allow the delivery person to trigger notification events when:
-      1. Delivery person picks up laundry to be delivered
-      2. Delivery person is arriving to the customer's house.
+      In this tutorial, we'll build a notification system for Laundr.io, an
+      on-demand laundry service.
 
-      In a production app we would probably trigger the second notification when
-      the Delivery person was physically near the customer, using GPS. In this
-      case we'll just use a button.
-  
       Let's get started!
 
   .step(
@@ -31,13 +27,15 @@
     :markdown
       ## Trigger the Notifications
 
-      This screen shows two buttons that allow the laundry delivery
-      person to trigger notifications. There are two cases we'd like to handle:
+      This screen shows two buttons that allow the laundry delivery person to
+      trigger notifications. There are two cases we'd like to handle:
 
-      1. Send a notification when the laundry delivery person picked up the
-         clothes, so the client will receive a SMS with the ETA of their
-         clothes.
-      1. Send a notification when the clothes have arrived to their destination.
+      1. Delivery person picks up laundry to be delivered.
+      2. Delivery person is arriving to the customer's house.
+
+      In a production app we would probably trigger the second notification
+      when the delivery person was physically near the customer, using GPS. In
+      this case we'll just use a button.
 
       Now, on the server we're going to use the Twilio API Client to actually
       send out the notifications.
@@ -47,12 +45,13 @@
     data-file='app/Providers/TwilioRestClientProvider.php',
     data-highlight='15-20')
     :markdown
-      ## Setting up the Twilio REST Client
+      ## Setting Up the Twilio REST Client
 
-      Here we create an authenticated Twilio REST API client that we can use
-      anytime we need to send a text message.We initialize it with our
-      [Twilio Account Credentials](//www.twilio.com/user/account/messaging/dashboard)
-      stored as environment variables.
+      Here we create a helper class with an authenticated Twilio REST API
+      client that we can use anytime we need to send a text message. We
+      initialize it with our [Twilio Account
+      Credentials](//www.twilio.com/user/account/settings) stored
+      as environment variables.
 
       ---
 
@@ -63,7 +62,7 @@
   .step(
     data-title='Handling the Notification Trigger',
     data-file='app/Http/Controllers/OrderController.php',
-    data-highlight='61-73')
+    data-highlight='28-33, 45-50')
     :markdown
       ## Handling the Notification Trigger
 
@@ -72,6 +71,24 @@
 
       Next let's look closer at how we send the SMS.
 
+.step(
+    data-title='Sending the Message',
+    data-file='app/Http/Controllers/OrderController.php',
+    data-highlight='61-73')
+    :markdown
+        ## Sending the Message
+
+        Here is the method that actually sends the sms. If we want to improve
+        the message we can send a picture of the laundry by adding:
+
+        ```php
+        'media_url' => 'http://lorempixel.com/image_output/fashion-q-c-640-480-1.jpg'
+        ```
+
+        In addition to the required parameters, we can pass a `status_callback`
+        url to let us know if the message was delivered. Let's take a closer
+        look at how this works.
+
   .step(
     data-title='Handling the Twilio Callback',
     data-file='app/Http/Controllers/OrderController.php',
@@ -79,32 +96,41 @@
     :markdown
       ## Handling the Twilio Callback
 
-      Twilio will make a post request each time your message status changes to one of the following: queued, failed, sent, delivered, or undelivered.
+      Twilio will make a post request to this controller, each time our message
+      status changes to one of the following: queued, failed, sent, delivered, or
+      undelivered.
 
-      The order's notifications status will change accordingly.
+      We then update this `notification_status` on the `Order` so that we can decide
+      what to do next with the Order. This is a great place to add logic that would
+      resend the message or send out an
+      [automated survey](//www.twilio.com/docs/tutorials/walkthrough/automated-survey/php/laravel).
 
       ---
       **See Also:**
-      * [Message Status](//www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter-request-parameters)
+      * [Message Status Parameter](//www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter-request-parameters)
+      * [Message Status Values](//www.twilio.com/docs/api/rest/message#sms-status-values)
   
   .step
     :markdown
       ## Where to next?
 
-      That's it! We've just implemented an application to instantly route leads
-      to sales people using text messages.
+      That's it! We've just implemented an on-demand notification service that
+      alerts our customers when they're order is arriving.
       
       If you are a PHP developer working with Twilio,  you might want
       to check out these other tutorials:
 
-      [**Click-To-Call**](//www.twilio.com/docs/howto/walkthrough/click-to-call/php/laravel)
+      [**Workflow Automation**](//www.twilio.com/docs/tutorials/walkthrough/workflow-automation/php/laravel)
 
-      Put a button on your web page that connects visitors to live support or sales people via telephone.
+      Increase your rate of response by automating the workflows that are key
+      to your business. In this tutorial, learn how to build a ready-for-scale
+      automated SMS workflow, for a vacation rental company.
 
-      [**Automated Survey**](https://www.twilio.com/docs/howto/walkthrough/automated-survey/php/laravel)
+      [**Masked Numbers**](//www.twilio.com/docs/tutorials/walkthrough/masked-numbers/php/laravel)
 
-      Instantly collect structured data from your users with a survey conducted
-      over a voice call or SMS text messages.
+      Protect your users' privacy by anonymously connecting them with Twilio
+      Voice and SMS. Learn how to create disposable phone numbers on-demand,
+      so two users can communicate without exchanging personal information.
 
       ## Did this help?
 
