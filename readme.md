@@ -60,9 +60,9 @@ ETA notifications implementation with PHP - Laravel and Twilio.
    $ php artisan db:seed
    ```
 
-1. Exposing your application to the wider internet using ngrok. You can look
+1. Expose your application to the wider internet using ngrok. You can look
    [here](#expose-the-application-to-the-wider-internet) for more details. This step
-   is important because the application won't work as expected if you run it through a
+   is important because the application won't work as expected if you run it through the
    localhost.
 
    ```bash
