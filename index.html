@@ -54,7 +54,7 @@ and then simply send an SMS message with the specified body.</p>
 the message we can send a picture of the laundry by adding:</p>
 <pre><code class="cm-s-monokai lang-php">&#39;media_url&#39; =&gt; &#39;http://lorempixel.com/image_output/fashion-q-c-640-480-1.jpg&#39;
 </code></pre>
-<p>In addition to the required parameters, we can pass a <code>status_callback</code>
+<p>In addition to the required parameters, we can pass a <code>StatusCallback</code>
 url to let us know if the message was delivered. Let&#39;s take a closer
 look at how this works.</p>
 </div><div data-title="Handling the Twilio Callback" data-file="app/Http/Controllers/OrderController.php" data-highlight="55-59" class="step"><h2 id="handling-the-twilio-callback">Handling the Twilio Callback</h2>
