@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Order;
+use Twilio\Rest\Client;
 
 class OrderControllerTest extends TestCase
 {
@@ -12,56 +13,62 @@ class OrderControllerTest extends TestCase
     public function testIndex()
     {
         // Given
-        $order1 = new Order([
-            'customer_name' => 'Mia Wallace',
-            'phone_number' => '+15551231234'
-        ]);
+        $order1 = new Order(
+            [
+                'customer_name' => 'Mia Wallace',
+                'phone_number' => '+15551231234'
+            ]
+        );
         $order1->save();
-        $order2 = new Order([
-            'customer_name' => 'Marsellus Wallace',
-            'phone_number' => '+15551234321'
-        ]);
+        $order2 = new Order(
+            [
+                'customer_name' => 'Marsellus Wallace',
+                'phone_number' => '+15551234321'
+            ]
+        );
         $order2->save();
 
         // When
         $this->visit('/orders')
-             ->see('Mia Wallace')
-             ->see('Marsellus Wallace')
-             ->see('Ready');
+            ->see('Mia Wallace')
+            ->see('Marsellus Wallace')
+            ->see('Ready');
     }
 
-    public function testPickup() {
+    public function testPickup()
+    {
         // Given
         $this->startSession();
-        $order = new Order([
-            'customer_name' => 'Mia Wallace',
-            'phone_number' => '+15551231234'
-        ]);
+        $order = new Order(
+            [
+                'customer_name' => 'Mia Wallace',
+                'phone_number' => '+15551231234'
+            ]
+        );
         $order->save();
         $order = $order->fresh();
         $this->assertEquals('Ready', $order->status);
         $this->assertEquals('None', $order->notification_status);
         $this->assertCount(1, Order::all());
 
-        $mockTwilioService = Mockery::mock('Services_Twilio')
-                                ->makePartial();
-        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioService = Mockery::mock(Client::class)->makePartial();
         $mockTwilioMessages = Mockery::mock();
-        $mockTwilioAccount->messages = $mockTwilioMessages;
-        $mockTwilioService->account = $mockTwilioAccount;
+        $mockTwilioService->messages = $mockTwilioMessages;
 
         $twilioNumber = config('services.twilio')['number'];
         $mockTwilioMessages
             ->shouldReceive('create')
-            ->with([
-                'From' => $twilioNumber,
-                'To' => $order->phone_number,
-                'Body' => 'Your laundry is done and on its way to you!',
-                'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
-            ])->once();
+            ->with(
+                $order->phone_number,
+                [
+                    'from' => $twilioNumber,
+                    'body' => 'Your laundry is done and on its way to you!',
+                    'statusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
+                ]
+            )->once();
 
         $this->app->instance(
-            'Services_Twilio',
+            Client::class,
             $mockTwilioService
         );
 
@@ -79,13 +86,16 @@ class OrderControllerTest extends TestCase
         $this->assertRedirectedToRoute('order.show', ['id' => $order->id]);
     }
 
-    public function testDeliver() {
+    public function testDeliver()
+    {
         // Given
         $this->startSession();
-        $order = new Order([
-            'customer_name' => 'Marsellus Wallace',
-            'phone_number' => '+15551231234'
-        ]);
+        $order = new Order(
+            [
+                'customer_name' => 'Marsellus Wallace',
+                'phone_number' => '+15551231234'
+            ]
+        );
         $order->save();
         $order = $order->fresh();
 
@@ -93,25 +103,24 @@ class OrderControllerTest extends TestCase
         $this->assertEquals('None', $order->notification_status);
         $this->assertCount(1, Order::all());
 
-        $mockTwilioService = Mockery::mock('Services_Twilio')
-                                ->makePartial();
-        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioService = Mockery::mock(Client::class)->makePartial();
         $mockTwilioMessages = Mockery::mock();
-        $mockTwilioAccount->messages = $mockTwilioMessages;
-        $mockTwilioService->account = $mockTwilioAccount;
+        $mockTwilioService->messages = $mockTwilioMessages;
 
         $twilioNumber = config('services.twilio')['number'];
         $mockTwilioMessages
             ->shouldReceive('create')
-            ->with([
-                'From' => $twilioNumber,
-                'To' => $order->phone_number,
-                'Body' => 'Your laundry is arriving now.',
-                'StatusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
-            ])->once();
+            ->with(
+                $order->phone_number,
+                [
+                    'from' => $twilioNumber,
+                    'body' => 'Your laundry is arriving now.',
+                    'statusCallback' => "http://localhost/order/{$order->id}/notification/status/update"
+                ]
+            )->once();
 
         $this->app->instance(
-            'Services_Twilio',
+            Client::class,
             $mockTwilioService
         );
 
@@ -129,13 +138,16 @@ class OrderControllerTest extends TestCase
         $this->assertRedirectedToRoute('order.index');
     }
 
-    public function testNotificationStatus() {
+    public function testNotificationStatus()
+    {
         // Given
         $this->startSession();
-        $order = new Order([
-            'customer_name' => 'Marsellus Wallace',
-            'phone_number' => '+15551231234'
-        ]);
+        $order = new Order(
+            [
+                'customer_name' => 'Marsellus Wallace',
+                'phone_number' => '+15551231234'
+            ]
+        );
         $order->save();
         $order = $order->fresh();
 
