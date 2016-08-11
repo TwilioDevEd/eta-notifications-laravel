@@ -43,13 +43,13 @@
   .step(
     data-title='Setting Up the Twilio REST Client',
     data-file='app/Providers/TwilioRestClientProvider.php',
-    data-highlight='15-20')
+    data-highlight='4,15-20')
     :markdown
       ## Setting Up the Twilio REST Client
 
       Here we create an authenticated Twilio REST API client that we can use
       anytime we need to send a text message. We initialize it with our
-      [Twilio Account Credentials](//www.twilio.com/user/account/settings) stored
+      [Twilio Account Credentials](//www.twilio.com/console) stored
       as environment variables.
 
       ---
@@ -61,7 +61,7 @@
   .step(
     data-title='Handling the Notification Trigger',
     data-file='app/Http/Controllers/OrderController.php',
-    data-highlight='28-33, 45-50')
+    data-highlight='29-35, 47-53')
     :markdown
       ## Handling the Notification Trigger
 
@@ -73,7 +73,7 @@
 .step(
     data-title='Sending the Message',
     data-file='app/Http/Controllers/OrderController.php',
-    data-highlight='61-73')
+    data-highlight='65-80')
     :markdown
         ## Sending the Message
 
@@ -81,17 +81,17 @@
         the message we can send a picture of the laundry by adding:
 
         ```php
-        'media_url' => 'http://lorempixel.com/image_output/fashion-q-c-640-480-1.jpg'
+        'mediaUrl' => 'http://lorempixel.com/image_output/fashion-q-c-640-480-1.jpg'
         ```
 
-        In addition to the required parameters, we can pass a `StatusCallback`
+        In addition to the required parameters, we can pass a `statusCallback`
         url to let us know if the message was delivered. Let's take a closer
         look at how this works.
 
   .step(
     data-title='Handling the Twilio Callback',
     data-file='app/Http/Controllers/OrderController.php',
-    data-highlight='55-59')
+    data-highlight='58-63')
     :markdown
       ## Handling the Twilio Callback
 
@@ -133,6 +133,6 @@
 
       ## Did this help?
 
-      Thanks for checking out this tutorial! If you have any feedback to share
-      with us, we'd love to hear it. Tweet
-      [@twilio](http://twitter.com/twilio) to let us know what you think.
+      Thanks for checking this tutorial out! If you have any feedback to share with us,
+      we'd love to hear it. [Contact the Twilio Developer Education Team](mailto:deved-oss@twilio.com)
+      to let us know what you think.
