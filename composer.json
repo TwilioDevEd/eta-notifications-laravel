@@ -1,5 +1,5 @@
 {
-    "name": "TwilioDevEd/conference-broadcast-laravel",
+    "name": "twilio-deved/conference-broadcast-laravel",
     "description": "Laravel implementation of ETA notifications",
     "keywords": ["twilio", "eta"],
     "license": "MIT",
